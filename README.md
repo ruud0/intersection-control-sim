@@ -3,6 +3,12 @@
 A microsimulation study of three ways to run a six-signal urban grid — and a
 measurement of what the futuristic option actually costs the people on foot.
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ruud0/intersection-control-sim/blob/main/notebooks/demo.ipynb)
+
+**[Run the simulation in your browser](https://colab.research.google.com/github/ruud0/intersection-control-sim/blob/main/notebooks/demo.ipynb)** — no install. The
+notebook runs a reduced sweep, regenerates the figures below from your own run,
+and renders the grid animating under whichever controller you pick. ~5 minutes.
+
 ![headline result](docs/headline.png)
 
 ## The result
