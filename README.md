@@ -1,11 +1,11 @@
 # Intersection Control: Signals vs. Scheduling
 
-A microsimulation study of three ways to run a six-signal urban grid — and a
+A microsimulation study of three ways to run a six-signal urban grid, and a
 measurement of what the futuristic option actually costs the people on foot.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ruud0/intersection-control-sim/blob/main/notebooks/demo.ipynb)
 
-**[Run the simulation in your browser](https://colab.research.google.com/github/ruud0/intersection-control-sim/blob/main/notebooks/demo.ipynb)** — no install. The
+**[Run the simulation in your browser](https://colab.research.google.com/github/ruud0/intersection-control-sim/blob/main/notebooks/demo.ipynb)**, no install needed. The
 notebook runs a reduced sweep, regenerates the figures below from your own run,
 and renders the grid animating under whichever controller you pick. ~5 minutes.
 
@@ -20,14 +20,14 @@ Two things complicate it, and both are the point of the study:
 
 **The delay advantage inverts under load.** Below roughly 1,800 vehicles/hour
 scheduling has the lowest delay of the three. Above it, semi-actuated signals
-take over and stay ahead — 90.9 s vs 106.5 s at 2,000 veh/h, 92.1 s vs 127.7 s
+take over and stay ahead: 90.9 s vs 106.5 s at 2,000 veh/h, 92.1 s vs 127.7 s
 at 3,000.
 
 **Scheduling pays for its smoothness at the crosswalk.** Mean pedestrian wait
 under scheduling climbs from 14.3 s to 34.6 s as demand rises, a 2.4× increase,
 while both signal strategies hold flat near 13 s. Continuous vehicle flow means
 there is never a natural gap to release a pedestrian into, so the crossing has
-to be forced — and under load it gets forced late.
+to be forced, and under load it gets forced late.
 
 | Strategy | Stops/veh | Mean delay | p95 delay | Ped wait |
 |---|---|---|---|---|
@@ -46,7 +46,7 @@ across the street.
 
 This reimplements and extends an IE 496 undergraduate research project (Penn
 State) that compared the same three strategies in SUMO. That study found the
-three strategies clearing traffic in essentially the same time — a 1.9% spread —
+three strategies clearing traffic in essentially the same time (a 1.9% spread)
 and concluded the difference was qualitative.
 
 I thought the null result was an artifact of the experiment rather than a fact
@@ -61,29 +61,29 @@ just does not show up in clearing time.
 A time-stepped microsimulation, written from scratch in Python with no
 simulation dependencies.
 
-**Network** — six signalised intersections on a 2×3 grid: two north-south
+**Network.** Six signalised intersections on a 2×3 grid: two north-south
 avenues crossing three east-west streets, 16 nodes and 17 street segments. The
 geometry mirrors the original SUMO network.
 
-**Driving** — the Krauss car-following model, the same model SUMO uses by
+**Driving.** The Krauss car-following model, the same model SUMO uses by
 default. Drivers take the fastest speed from which they can still stop safely,
 minus a random dawdling term, which reproduces platoon formation and stop-and-go
 waves rather than assuming them.
 
-**Demand** — Poisson arrivals over a weighted origin-destination matrix. The
+**Demand.** Poisson arrivals over a weighted origin-destination matrix. The
 east-west streets act as an arterial, the peak direction is loaded more heavily
 than the counter-peak, and the arrival rate follows a smooth peak so every run
 covers under-saturated, saturated, and recovering conditions. 8% trucks, with
 their own length and acceleration.
 
-**Pedestrians** — Poisson arrivals at each crossing, with MUTCD timing: a 4 s
+**Pedestrians.** Poisson arrivals at each crossing, with MUTCD timing: a 4 s
 WALK interval plus a clearance interval computed at the 3.5 ft/s design walking
 speed, giving a ~15.2 s minimum green wherever pedestrians are served.
 
 **The three controllers**
 
 - *Fixed-time* uses **Webster's formula** to set cycle length from the critical
-  flow ratios, with green split in proportion — the textbook OR method, so the
+  flow ratios, with green split in proportion, the textbook OR method, so the
   baseline is a fair opponent rather than an arbitrary cycle.
 - *Semi-actuated* rests the arterial in green and serves the side street on
   detector or push-button call, with unit extension, gap-out, and max-out.
@@ -93,7 +93,7 @@ speed, giving a ~15.2 s minimum green wherever pedestrians are served.
   it there. Pedestrians book the crossing too, and pre-empt vehicle bookings
   once they have waited past the limit.
 
-**Validation** — intersection occupancy is enforced physically for every
+**Validation.** Intersection occupancy is enforced physically for every
 strategy, independent of the controller, so no strategy can claim a movement the
 geometry would not allow. The signal strategies trigger this check zero times,
 as they should. Scheduling triggers it 709–4,614 times per run, which is a real
@@ -138,7 +138,7 @@ Fixed-time on the left, scheduling on the right. Red dots are stopped vehicles.
 There is no external dataset. All demand is generated from the seeded
 origin-destination model in `src/demand.py`, so every figure in this README
 regenerates exactly from the commands above. `results/results.csv` holds one row
-per run — 120 rows, 241,938 vehicles simulated, every vehicle completing its
+per run: 120 rows, 241,938 vehicles simulated, every vehicle completing its
 route in every run.
 
 ## Layout
@@ -164,7 +164,7 @@ Stated plainly, because they bound what the numbers mean:
   against opposing traffic are not modeled.
 - The scheduler assumes perfect compliance, perfect sensing, and no
   communication latency. Those assumptions are why the pedestrian result matters
-  more than the vehicle result — the vehicle numbers are an upper bound on what
+  more than the vehicle result; the vehicle numbers are an upper bound on what
   scheduling could deliver, and it still loses on delay under load.
 - Pedestrian pre-emption caps the *mean* wait but not the tail: p95 pedestrian
   wait under scheduling reaches 121.6 s at the highest demand. That is a defect
@@ -181,4 +181,4 @@ three control strategies in SUMO.
 
 The original SUMO network, route files, and TraCI controller are not included
 here. All code in this repository is new, and every result reported above comes
-from this implementation — not from the original study.
+from this implementation, not from the original study.
